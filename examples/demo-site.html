@@ -296,12 +296,24 @@
             line-height: 1.1;
             margin-bottom: var(--space-lg);
             letter-spacing: -0.03em;
+            perspective: 1000px;
+            transform-style: preserve-3d;
         }
 
         .hero-title-line {
             display: block;
             opacity: 0;
-            transform: translateY(40px);
+            transform: translateY(40px) rotateX(90deg);
+            transform-origin: center bottom;
+            text-shadow: 
+                0 1px 0 rgba(0, 245, 212, 0.3),
+                0 2px 0 rgba(0, 245, 212, 0.25),
+                0 3px 0 rgba(0, 245, 212, 0.2),
+                0 4px 0 rgba(0, 245, 212, 0.15),
+                0 5px 0 rgba(0, 245, 212, 0.1),
+                0 6px 10px rgba(0, 0, 0, 0.4),
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                0 12px 40px rgba(0, 0, 0, 0.2);
         }
 
         .hero-title-gradient {
@@ -309,6 +321,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-shadow: 
+                0 1px 0 rgba(123, 44, 191, 0.4),
+                0 2px 0 rgba(123, 44, 191, 0.35),
+                0 3px 0 rgba(123, 44, 191, 0.3),
+                0 4px 0 rgba(123, 44, 191, 0.25),
+                0 5px 0 rgba(123, 44, 191, 0.2),
+                0 6px 10px rgba(0, 0, 0, 0.5),
+                0 8px 20px rgba(0, 0, 0, 0.4),
+                0 12px 40px rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 0 30px rgba(0, 245, 212, 0.5)) 
+                    drop-shadow(0 0 60px rgba(123, 44, 191, 0.4));
         }
 
         .hero-subtitle {
@@ -437,6 +460,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: var(--space-xl);
+            perspective: 1000px;
         }
 
         .demo-card {
@@ -445,15 +469,20 @@
             border-radius: var(--radius-xl);
             padding: var(--space-xl);
             cursor: pointer;
-            transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+            transition: border-color var(--transition-base);
             opacity: 0;
             transform: translateY(30px);
+            transform-style: preserve-3d;
+            will-change: transform, box-shadow;
         }
 
         .demo-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
             border-color: rgba(0, 245, 212, 0.3);
+        }
+
+        .demo-card-inner {
+            transform-style: preserve-3d;
+            pointer-events: none;
         }
 
         .demo-card-header {
@@ -598,6 +627,115 @@
             width: 24px;
             height: 24px;
             color: var(--color-bg-primary);
+        }
+
+        /* Particle Explosion Canvas */
+        .particle-stage {
+            position: relative;
+        }
+
+        #particleCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        /* Geometry Pattern Canvas */
+        .geometry-stage {
+            position: relative;
+        }
+
+        #geometryCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Physics Ball Canvas */
+        .physics-ball-stage {
+            position: relative;
+        }
+
+        #physicsBallCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Neon Glow Text */
+        .neon-stage {
+            position: relative;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.8) 0%, var(--color-bg-secondary) 100%);
+        }
+
+        .neon-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .neon-svg {
+            width: 180px;
+            height: 60px;
+            position: absolute;
+            z-index: 2;
+        }
+
+        .neon-text-svg {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 800;
+            fill: var(--color-accent-primary);
+            stroke: var(--color-accent-primary);
+            stroke-width: 1;
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            paint-order: stroke fill;
+        }
+
+        .neon-text-css {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--color-accent-primary);
+            position: absolute;
+            z-index: 1;
+            text-shadow:
+                0 0 5px var(--color-accent-primary),
+                0 0 10px var(--color-accent-primary),
+                0 0 20px var(--color-accent-primary),
+                0 0 40px var(--color-accent-primary),
+                0 0 80px var(--color-accent-primary),
+                0 0 90px var(--color-accent-primary),
+                0 0 100px var(--color-accent-primary),
+                0 0 150px var(--color-accent-primary);
+            animation: neonPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonPulse {
+            from {
+                text-shadow:
+                    0 0 5px var(--color-accent-primary),
+                    0 0 10px var(--color-accent-primary),
+                    0 0 20px var(--color-accent-primary),
+                    0 0 40px var(--color-accent-primary),
+                    0 0 80px var(--color-accent-primary);
+            }
+            to {
+                text-shadow:
+                    0 0 10px var(--color-accent-primary),
+                    0 0 20px var(--color-accent-primary),
+                    0 0 40px var(--color-accent-primary),
+                    0 0 80px var(--color-accent-primary),
+                    0 0 120px var(--color-accent-primary),
+                    0 0 160px var(--color-accent-primary);
+            }
         }
 
         /* ============================================
@@ -763,13 +901,14 @@
             overflow: hidden;
         }
 
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--color-accent-primary);
-            border-radius: 50%;
-            opacity: 0.3;
+        #globalParticleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
         /* ============================================
@@ -835,17 +974,100 @@
         }
 
         /* ============================================
+           3D Card Flip
+           ============================================ */
+        .flip3d-wrapper {
+            perspective: 1000px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .flip3d-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+        }
+
+        .flip3d-front,
+        .flip3d-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .flip3d-front {
+            background: linear-gradient(135deg, #00f5d4 0%, #7b2cbf 50%, #ff6b6b 100%);
+            transform: rotateY(0deg);
+            box-shadow: 
+                -20px 20px 60px rgba(0, 245, 212, 0.4),
+                20px -20px 60px rgba(123, 44, 191, 0.4),
+                0 0 40px rgba(255, 107, 107, 0.3);
+        }
+
+        .flip3d-back {
+            background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 50%, #7b2cbf 100%);
+            transform: rotateY(180deg);
+            box-shadow: 
+                20px -20px 60px rgba(255, 217, 61, 0.4),
+                -20px 20px 60px rgba(255, 107, 107, 0.4),
+                0 0 40px rgba(123, 44, 191, 0.3);
+        }
+
+        .flip3d-front-content,
+        .flip3d-back-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .flip3d-icon {
+            font-size: 28px;
+            color: var(--color-bg-primary);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .flip3d-label {
+            font-family: var(--font-display);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: var(--color-bg-primary);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ============================================
            Animation States
            ============================================ */
         .animate-in {
             opacity: 1 !important;
             transform: translateY(0) !important;
         }
+
+        /* ============================================
+           Mouse Glow Canvas
+           ============================================ */
+        .mouse-glow-canvas {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 245, 212, 0.05) 0%, transparent 70%);
+            cursor: crosshair;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 <body>
-    <!-- Floating Particles -->
-    <div class="particles" id="particles"></div>
+    <!-- Global Particle Background Canvas -->
+    <canvas id="globalParticleCanvas"></canvas>
 
     <!-- Navigation -->
     <nav class="nav" id="nav">
@@ -1021,7 +1243,7 @@
                 </div>
             </div>
 
-            <!-- Text Animation -->
+<!-- Text Animation -->
             <div class="demo-card" data-demo="text">
                 <div class="demo-card-header">
                     <h3 class="demo-card-title">文字动画</h3>
@@ -1033,6 +1255,120 @@
                         动画魔法
                     </div>
                     <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- 3D Card Flip -->
+            <div class="demo-card" data-demo="flip3d">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">3D卡片翻转</h3>
+                    <span class="demo-card-badge">震撼</span>
+                </div>
+                <p class="demo-card-description">立体3D翻转效果，配合动态光影模拟真实光源移动</p>
+                <div class="demo-card-stage">
+                    <div class="flip3d-wrapper" id="flip3dWrapper">
+                        <div class="flip3d-card" id="flip3dCard">
+                            <div class="flip3d-front">
+                                <div class="flip3d-front-content">
+                                    <span class="flip3d-icon">✦</span>
+                                    <span class="flip3d-label">正面</span>
+                                </div>
+                            </div>
+                            <div class="flip3d-back">
+                                <div class="flip3d-back-content">
+                                    <span class="flip3d-icon">◈</span>
+                                    <span class="flip3d-label">背面</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="demo-card-hint">点击触发翻转</span>
+                </div>
+            </div>
+
+            <!-- Mouse Glow Trail -->
+            <div class="demo-card" data-demo="mouseglow">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">鼠标光流</h3>
+                    <span class="demo-card-badge">震撼</span>
+                </div>
+                <p class="demo-card-description">鼠标跟随光流效果，绘制发光轨迹，渐隐淡出，流动感十足</p>
+                <div class="demo-card-stage">
+                    <canvas id="mouseGlowCanvas" class="mouse-glow-canvas"></canvas>
+                    <span class="demo-card-hint">移动鼠标绘制光流</span>
+                </div>
+            </div>
+
+<!-- Particle Explosion -->
+            <div class="demo-card" data-demo="particle">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">粒子爆炸</h3>
+                    <span class="demo-card-badge">震撼</span>
+                </div>
+                <p class="demo-card-description">Canvas物理引擎实现粒子爆炸，重力、衰减、连线效果</p>
+                <div class="demo-card-stage particle-stage">
+                    <canvas id="particleCanvas"></canvas>
+                    <span class="demo-card-hint">点击触发爆炸</span>
+                </div>
+            </div>
+
+            <!-- Neon Glow Text -->
+            <div class="demo-card" data-demo="neon">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">霓虹光效文字</h3>
+                    <span class="demo-card-badge">震撼</span>
+                </div>
+                <p class="demo-card-description">多层发光叠加、颜色循环变化、SVG描边动画，赛博朋克科技感</p>
+                <div class="demo-card-stage neon-stage">
+                    <div class="neon-container" id="neonContainer">
+                        <svg class="neon-svg" viewBox="0 0 200 60" id="neonSvg">
+                            <defs>
+                                <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur1"/>
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur2"/>
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur3"/>
+                                    <feMerge>
+                                        <feMergeNode in="blur3"/>
+                                        <feMergeNode in="blur2"/>
+                                        <feMergeNode in="blur1"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <text class="neon-text-svg" x="100" y="40" text-anchor="middle" 
+                                  id="neonTextSvg" filter="url(#neonGlow)">
+                                NEON
+                            </text>
+                        </svg>
+                        <div class="neon-text-css" id="neonTextCss">NEON</div>
+                    </div>
+                    <span class="demo-card-hint">点击触发霓虹动画</span>
+                </div>
+            </div>
+
+            <!-- Geometry Pattern Generator -->
+            <div class="demo-card" data-demo="geometry">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">几何图案生成器</h3>
+                    <span class="demo-card-badge">震撼</span>
+                </div>
+                <p class="demo-card-description">Canvas动态绘制几何图案，多种形状组合，旋转渐变动画</p>
+                <div class="demo-card-stage geometry-stage">
+                    <canvas id="geometryCanvas"></canvas>
+                    <span class="demo-card-hint">点击生成图案</span>
+                </div>
+            </div>
+
+            <!-- Physics Ball Bounce -->
+            <div class="demo-card" data-demo="physicsball">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">物理弹跳球</h3>
+                    <span class="demo-card-badge">震撼</span>
+                </div>
+                <p class="demo-card-description">Canvas物理引擎模拟，重力、碰撞、反弹，多球相互作用</p>
+                <div class="demo-card-stage physics-ball-stage">
+                    <canvas id="physicsBallCanvas"></canvas>
+                    <span class="demo-card-hint">点击生成弹跳球</span>
                 </div>
             </div>
         </div>
@@ -1162,6 +1498,9 @@
             initScrollAnimations();
             initDraggable();
             initButtonEffects();
+            initParticleCanvas();
+            initGeometryCanvas();
+            initPhysicsBallCanvas();
         });
 
         // ============================================
@@ -1213,11 +1552,12 @@
         // Hero Animations
         // ============================================
         function initHeroAnimations() {
-            // Background shapes floating animation
+            // Background shapes floating animation with color cycling
             anime({
                 targets: '#heroShape1',
                 translateX: [0, 30, 0],
                 translateY: [0, -20, 0],
+                scale: [1, 1.2, 1],
                 duration: 8000,
                 easing: 'easeInOutSine',
                 loop: true
@@ -1227,6 +1567,7 @@
                 targets: '#heroShape2',
                 translateX: [0, -25, 0],
                 translateY: [0, 25, 0],
+                scale: [1, 1.15, 1],
                 duration: 10000,
                 easing: 'easeInOutSine',
                 loop: true
@@ -1236,12 +1577,30 @@
                 targets: '#heroShape3',
                 translateX: [0, 20, 0],
                 translateY: [0, 30, 0],
+                scale: [1, 1.25, 1],
                 duration: 7000,
                 easing: 'easeInOutSine',
                 loop: true
             });
 
-            // Hero content timeline
+            // Dynamic gradient color cycling for background shapes
+            const gradientColors = [
+                { shape: '#heroShape1', colors: ['#00f5d4', '#7b2cbf', '#ff6b6b', '#00f5d4'] },
+                { shape: '#heroShape2', colors: ['#7b2cbf', '#ff6b6b', '#00f5d4', '#7b2cbf'] },
+                { shape: '#heroShape3', colors: ['#ff6b6b', '#00f5d4', '#7b2cbf', '#ff6b6b'] }
+            ];
+
+            gradientColors.forEach((config, index) => {
+                anime({
+                    targets: config.shape,
+                    backgroundColor: config.colors,
+                    duration: 6000 + index * 2000,
+                    easing: 'easeInOutSine',
+                    loop: true
+                });
+            });
+
+            // Hero content timeline with 3D entrance
             const heroTimeline = anime.timeline({
                 easing: 'easeOutExpo'
             });
@@ -1251,30 +1610,37 @@
                     targets: '#heroBadge',
                     opacity: [0, 1],
                     translateY: [20, 0],
-                    duration: 600
+                    rotateX: [45, 0],
+                    duration: 800
                 })
                 .add({
                     targets: '.hero-title-line',
                     opacity: [0, 1],
                     translateY: [40, 0],
-                    duration: 800,
-                    delay: anime.stagger(150)
+                    rotateX: [90, 0],
+                    translateZ: [50, 0],
+                    duration: 1200,
+                    delay: anime.stagger(200),
+                    easing: 'easeOutExpo'
                 }, '-=400')
                 .add({
                     targets: '#heroSubtitle',
                     opacity: [0, 1],
                     translateY: [20, 0],
-                    duration: 600
+                    rotateX: [30, 0],
+                    duration: 800
                 }, '-=400')
                 .add({
                     targets: '#heroCta',
                     opacity: [0, 1],
                     translateY: [20, 0],
+                    scale: [0.9, 1],
                     duration: 600
                 }, '-=400')
                 .add({
                     targets: '#scrollIndicator',
                     opacity: [0, 0.7],
+                    translateY: [10, 0],
                     duration: 600
                 }, '-=200');
         }
@@ -1302,11 +1668,71 @@
 
             observer.observe(document.querySelector('.demo-grid'));
 
-            // Add click handlers for each demo
+            // Add click handlers and 3D tilt effect for each demo card
             document.querySelectorAll('.demo-card').forEach(card => {
+                // Click handler
                 card.addEventListener('click', () => {
                     const demoType = card.dataset.demo;
                     runDemo(demoType);
+                });
+
+                // 3D Tilt Effect - Mouse tracking
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Calculate relative position (0-1 range)
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // Calculate tilt angles (max ±15 degrees)
+                    const maxTilt = 15;
+                    const rotateX = (y - centerY) / centerY * -maxTilt;
+                    const rotateY = (x - centerX) / centerX * maxTilt;
+                    
+                    // Calculate dynamic shadow based on tilt
+                    const shadowX = rotateY * 2;
+                    const shadowY = -rotateX * 2;
+                    const shadowBlur = 30 + Math.abs(rotateX + rotateY) * 0.5;
+                    const shadowOpacity = 0.4 + Math.abs(rotateX + rotateY) * 0.01;
+                    
+                    // Apply 3D tilt with anime.js for smooth animation
+                    anime({
+                        targets: card,
+                        rotateX: rotateX,
+                        rotateY: rotateY,
+                        translateZ: 20,
+                        boxShadow: `${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0, 245, 212, ${shadowOpacity})`,
+                        duration: 200,
+                        easing: 'easeOutQuad'
+                    });
+                    
+                    // Add shine effect overlay
+                    const shineX = (x / rect.width) * 100;
+                    const shineY = (y / rect.height) * 100;
+                    card.style.background = `
+                        radial-gradient(
+                            circle at ${shineX}% ${shineY}%,
+                            rgba(255, 255, 255, 0.15) 0%,
+                            transparent 50%
+                        ),
+                        var(--color-bg-card)
+                    `;
+                });
+
+                // Reset on mouse leave
+                card.addEventListener('mouseleave', () => {
+                    anime({
+                        targets: card,
+                        rotateX: 0,
+                        rotateY: 0,
+                        translateZ: 0,
+                        boxShadow: '0 10px 15px rgba(0, 0, 0, 0.5)',
+                        background: 'var(--color-bg-card)',
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
                 });
             });
         }
@@ -1314,7 +1740,7 @@
         // ============================================
         // Demo Animations
         // ============================================
-        function runDemo(type) {
+function runDemo(type) {
             switch(type) {
                 case 'transform':
                     runTransformDemo();
@@ -1334,10 +1760,26 @@
                 case 'elastic':
                     runElasticDemo();
                     break;
-                case 'text':
+ case 'text':
                     runTextDemo();
                     break;
+                case 'particle':
+                    runParticleDemo();
+                    break;
+                case 'neon':
+                    runNeonDemo();
+                    break;
+                case 'geometry':
+                    runGeometryDemo();
+                    break;
+                case 'physicsball':
+                    runPhysicsBallDemo();
+                    break;
             }
+        }
+        }
+        }
+        }
         }
 
         // Basic Transform Demo
@@ -1501,6 +1943,825 @@
             });
         }
 
+        // Mouse Glow Demo
+        function runMouseGlowDemo() {
+            const canvas = document.getElementById('mouseGlowCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            const trailPoints = [];
+            const maxPoints = 50;
+            let isAnimating = false;
+
+            canvas.addEventListener('mousemove', (e) => {
+                const canvasRect = canvas.getBoundingClientRect();
+                const x = e.clientX - canvasRect.left;
+                const y = e.clientY - canvasRect.top;
+
+                trailPoints.push({
+                    x: x,
+                    y: y,
+                    opacity: 1,
+                    size: 10,
+                    timestamp: Date.now()
+                });
+
+                if (trailPoints.length > maxPoints) {
+                    trailPoints.shift();
+                }
+
+                if (!isAnimating) {
+                    isAnimating = true;
+                    animateGlow();
+                }
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                isAnimating = false;
+            });
+
+            function animateGlow() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < trailPoints.length; i++) {
+                    const point = trailPoints[i];
+                    const age = Date.now() - point.timestamp;
+                    const fadeSpeed = 0.03;
+                    point.opacity = Math.max(0, 1 - (age / 1000) * fadeSpeed * 30);
+
+                    if (point.opacity <= 0) {
+                        trailPoints.splice(i, 1);
+                        i--;
+                        continue;
+                    }
+
+                    const gradient = ctx.createRadialGradient(
+                        point.x, point.y, 0,
+                        point.x, point.y, point.size * 2
+                    );
+
+                    const hue = (i * 5) % 360;
+                    gradient.addColorStop(0, `hsla(${hue}, 100%, 70%, ${point.opacity})`);
+                    gradient.addColorStop(0.5, `hsla(${hue}, 100%, 50%, ${point.opacity * 0.5})`);
+                    gradient.addColorStop(1, `hsla(${hue}, 100%, 30%, 0)`);
+
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, point.size * 2, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+
+                    if (i > 0) {
+                        const prevPoint = trailPoints[i - 1];
+                        ctx.beginPath();
+                        ctx.moveTo(prevPoint.x, prevPoint.y);
+                        ctx.lineTo(point.x, point.y);
+                        ctx.strokeStyle = `hsla(${hue}, 100%, 60%, ${point.opacity * 0.3})`;
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                }
+
+                if (trailPoints.length > 0 && isAnimating) {
+                    requestAnimationFrame(animateGlow);
+                } else {
+                    isAnimating = false;
+                }
+            }
+        }
+
+        // 3D Card Flip Demo
+        function runFlip3dDemo() {
+            const card = document.getElementById('flip3dCard');
+            const front = card.querySelector('.flip3d-front');
+            const back = card.querySelector('.flip3d-back');
+            
+            let isFlipped = card.dataset.flipped === 'true';
+            const targetRotateY = isFlipped ? 0 : 180;
+            
+            anime({
+                targets: card,
+                rotateY: targetRotateY,
+                duration: 900,
+                easing: 'easeInOutCubic',
+                update: function(anim) {
+                    const progress = anim.progress;
+                    const currentRotateY = isFlipped ? 180 - (180 * progress / 100) : (180 * progress / 100);
+                    
+                    const lightAngle = currentRotateY;
+                    const shadowX = Math.sin(lightAngle * Math.PI / 180) * 20;
+                    const shadowY = Math.cos(lightAngle * Math.PI / 180) * 20;
+                    
+                    const frontOpacity = Math.max(0, 1 - Math.abs(currentRotateY - 0) / 90);
+                    const backOpacity = Math.max(0, 1 - Math.abs(currentRotateY - 180) / 90);
+                    
+                    front.style.boxShadow = `
+                        ${-shadowX}px ${shadowY}px 60px rgba(0, 245, 212, ${0.4 * frontOpacity}),
+                        ${shadowX}px ${-shadowY}px 60px rgba(123, 44, 191, ${0.4 * frontOpacity}),
+                        0 0 40px rgba(255, 107, 107, ${0.3 * frontOpacity})
+                    `;
+                    
+                    back.style.boxShadow = `
+                        ${shadowX}px ${-shadowY}px 60px rgba(255, 217, 61, ${0.4 * backOpacity}),
+                        ${-shadowX}px ${shadowY}px 60px rgba(255, 107, 107, ${0.4 * backOpacity}),
+                        0 0 40px rgba(123, 44, 191, ${0.3 * backOpacity})
+                    `;
+                },
+                complete: function() {
+                    card.dataset.flipped = !isFlipped;
+                }
+            });
+        }
+
+        // Particle Explosion Demo
+        const particleColors = ['#00f5d4', '#7b2cbf', '#ff6b6b', '#ffd93d'];
+        let particleSystem = null;
+
+        class Particle {
+            constructor(x, y, canvas) {
+                this.x = x;
+                this.y = y;
+                this.canvas = canvas;
+                this.vx = (Math.random() - 0.5) * 12;
+                this.vy = (Math.random() - 0.5) * 12 - 5;
+                this.radius = Math.random() * 4 + 2;
+                this.life = 1;
+                this.decay = Math.random() * 0.015 + 0.008;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.gravity = 0.15;
+                this.friction = 0.98;
+            }
+
+            update() {
+                this.vy += this.gravity;
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+
+                const bounceEnergy = 0.6;
+                if (this.x - this.radius < 0) {
+                    this.x = this.radius;
+                    this.vx *= -bounceEnergy;
+                }
+                if (this.x + this.radius > this.canvas.width) {
+                    this.x = this.canvas.width - this.radius;
+                    this.vx *= -bounceEnergy;
+                }
+                if (this.y - this.radius < 0) {
+                    this.y = this.radius;
+                    this.vy *= -bounceEnergy;
+                }
+                if (this.y + this.radius > this.canvas.height) {
+                    this.y = this.canvas.height - this.radius;
+                    this.vy *= -bounceEnergy;
+                }
+            }
+
+            draw(ctx) {
+                const alpha = this.life;
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius * 2
+                );
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(0.5, this.color + Math.floor(alpha * 255).toString(16).padStart(2, '0'));
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * 2, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = alpha;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+
+            isAlive() {
+                return this.life > 0;
+            }
+        }
+
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.animationId = null;
+                this.resizeCanvas();
+            }
+
+            resizeCanvas() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            explode(x, y, count = 80) {
+                for (let i = 0; i < count; i++) {
+                    this.particles.push(new Particle(x, y, this.canvas));
+                }
+                if (!this.animationId) {
+                    this.animate();
+                }
+            }
+
+            drawConnections() {
+                const maxDistance = 80;
+                for (let i = 0; i < this.particles.length; i++) {
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const dx = this.particles[i].x - this.particles[j].x;
+                        const dy = this.particles[i].y - this.particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < maxDistance) {
+                            const alpha = (1 - distance / maxDistance) * 
+                                Math.min(this.particles[i].life, this.particles[j].life) * 0.5;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+                            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                            this.ctx.strokeStyle = `rgba(0, 245, 212, ${alpha})`;
+                            this.ctx.lineWidth = 1;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.drawConnections();
+
+                this.particles.forEach(p => {
+                    p.update();
+                    p.draw(this.ctx);
+                });
+
+                this.particles = this.particles.filter(p => p.isAlive());
+
+                if (this.particles.length > 0) {
+                    this.animationId = requestAnimationFrame(() => this.animate());
+                } else {
+                    this.animationId = null;
+                }
+            }
+        }
+
+        function initParticleCanvas() {
+            const canvas = document.getElementById('particleCanvas');
+            if (!canvas) return;
+
+            particleSystem = new ParticleSystem(canvas);
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                particleSystem.explode(x, y, 80);
+            });
+
+            window.addEventListener('resize', () => {
+                if (particleSystem) {
+                    particleSystem.resizeCanvas();
+                }
+            });
+        }
+
+        function runParticleDemo() {
+            if (!particleSystem) {
+                initParticleCanvas();
+            }
+            const canvas = document.getElementById('particleCanvas');
+            if (canvas && particleSystem) {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                particleSystem.explode(centerX, centerY, 100);
+            }
+        }
+
+        // ============================================
+        // Geometry Pattern Generator
+        // ============================================
+        const geometryColors = ['#00f5d4', '#7b2cbf', '#ff6b6b', '#ffd93d'];
+        let geometrySystem = null;
+
+        class GeometryShape {
+            constructor(x, y, canvas, type) {
+                this.x = x;
+                this.y = y;
+                this.canvas = canvas;
+                this.type = type;
+                this.size = Math.random() * 30 + 15;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.05;
+                this.color = geometryColors[Math.floor(Math.random() * geometryColors.length)];
+                this.opacity = 1;
+                this.scale = 0;
+                this.targetScale = 1;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.life = 1;
+                this.decay = Math.random() * 0.005 + 0.002;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.scale(this.scale, this.scale);
+                ctx.globalAlpha = this.opacity * this.life;
+
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(0.7, this.color + '80');
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+
+                switch(this.type) {
+                    case 'triangle':
+                        this.drawTriangle(ctx);
+                        break;
+                    case 'circle':
+                        this.drawCircle(ctx);
+                        break;
+                    case 'hexagon':
+                        this.drawHexagon(ctx);
+                        break;
+                    case 'diamond':
+                        this.drawDiamond(ctx);
+                        break;
+                    case 'star':
+                        this.drawStar(ctx);
+                        break;
+                }
+
+                ctx.restore();
+            }
+
+            drawTriangle(ctx) {
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size);
+                ctx.lineTo(this.size * 0.866, this.size * 0.5);
+                ctx.lineTo(-this.size * 0.866, this.size * 0.5);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            drawCircle(ctx) {
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            drawHexagon(ctx) {
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (Math.PI / 3) * i;
+                    const x = Math.cos(angle) * this.size;
+                    const y = Math.sin(angle) * this.size;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            drawDiamond(ctx) {
+                ctx.beginPath();
+                ctx.moveTo(0, -this.size);
+                ctx.lineTo(this.size * 0.7, 0);
+                ctx.lineTo(0, this.size);
+                ctx.lineTo(-this.size * 0.7, 0);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            drawStar(ctx) {
+                ctx.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    const outerAngle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                    const innerAngle = outerAngle + Math.PI / 5;
+                    const outerX = Math.cos(outerAngle) * this.size;
+                    const outerY = Math.sin(outerAngle) * this.size;
+                    const innerX = Math.cos(innerAngle) * this.size * 0.5;
+                    const innerY = Math.sin(innerAngle) * this.size * 0.5;
+                    if (i === 0) ctx.moveTo(outerX, outerY);
+                    else ctx.lineTo(outerX, outerY);
+                    ctx.lineTo(innerX, innerY);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            update() {
+                this.rotation += this.rotationSpeed;
+                this.scale = Math.min(this.scale + 0.05, this.targetScale);
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+
+                if (this.x < 0 || this.x > this.canvas.width) this.vx *= -0.8;
+                if (this.y < 0 || this.y > this.canvas.height) this.vy *= -0.8;
+
+                this.x = Math.max(0, Math.min(this.canvas.width, this.x));
+                this.y = Math.max(0, Math.min(this.canvas.height, this.y));
+            }
+
+            isAlive() {
+                return this.life > 0;
+            }
+        }
+
+        class GeometrySystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.shapes = [];
+                this.animationId = null;
+                this.resizeCanvas();
+            }
+
+            resizeCanvas() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            generatePattern(x, y, count = 40) {
+                const shapeTypes = ['triangle', 'circle', 'hexagon', 'diamond', 'star'];
+
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 / count) * i;
+                    const distance = Math.random() * 80 + 20;
+                    const offsetX = Math.cos(angle) * distance;
+                    const offsetY = Math.sin(angle) * distance;
+                    const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+
+                    this.shapes.push(new GeometryShape(
+                        x + offsetX,
+                        y + offsetY,
+                        this.canvas,
+                        type
+                    ));
+                }
+
+                if (!this.animationId) {
+                    this.animate();
+                }
+            }
+
+            drawConnections() {
+                const maxDistance = 60;
+                for (let i = 0; i < this.shapes.length; i++) {
+                    for (let j = i + 1; j < this.shapes.length; j++) {
+                        const dx = this.shapes[i].x - this.shapes[j].x;
+                        const dy = this.shapes[i].y - this.shapes[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < maxDistance) {
+                            const alpha = (1 - distance / maxDistance) *
+                                Math.min(this.shapes[i].life, this.shapes[j].life) * 0.3;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.shapes[i].x, this.shapes[i].y);
+                            this.ctx.lineTo(this.shapes[j].x, this.shapes[j].y);
+                            this.ctx.strokeStyle = `rgba(0, 245, 212, ${alpha})`;
+                            this.ctx.lineWidth = 1;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.drawConnections();
+
+                this.shapes.forEach(shape => {
+                    shape.update();
+                    shape.draw(this.ctx);
+                });
+
+                this.shapes = this.shapes.filter(shape => shape.isAlive());
+
+                if (this.shapes.length > 0) {
+                    this.animationId = requestAnimationFrame(() => this.animate());
+                } else {
+                    this.animationId = null;
+                }
+            }
+        }
+
+        function initGeometryCanvas() {
+            const canvas = document.getElementById('geometryCanvas');
+            if (!canvas) return;
+
+            geometrySystem = new GeometrySystem(canvas);
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                geometrySystem.generatePattern(x, y, 40);
+            });
+
+            window.addEventListener('resize', () => {
+                if (geometrySystem) {
+                    geometrySystem.resizeCanvas();
+                }
+            });
+        }
+
+        function runGeometryDemo() {
+            if (!geometrySystem) {
+                initGeometryCanvas();
+            }
+            const canvas = document.getElementById('geometryCanvas');
+            if (canvas && geometrySystem) {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                geometrySystem.generatePattern(centerX, centerY, 50);
+            }
+        }
+
+        // ============================================
+        // Physics Ball Bounce System
+        // ============================================
+        const physicsBallColors = ['#00f5d4', '#7b2cbf', '#ff6b6b', '#ffd93d'];
+        let physicsBallSystem = null;
+
+        class PhysicsBall {
+            constructor(x, y, canvas) {
+                this.x = x;
+                this.y = y;
+                this.canvas = canvas;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = (Math.random() - 0.5) * 4 - 2;
+                this.radius = Math.random() * 10 + 10;
+                this.color = physicsBallColors[Math.floor(Math.random() * physicsBallColors.length)];
+                this.gravity = 0.3;
+                this.friction = 0.99;
+                this.bounceEnergy = 0.85;
+                this.mass = this.radius;
+            }
+
+            update() {
+                this.vy += this.gravity;
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x - this.radius < 0) {
+                    this.x = this.radius;
+                    this.vx *= -this.bounceEnergy;
+                }
+                if (this.x + this.radius > this.canvas.width) {
+                    this.x = this.canvas.width - this.radius;
+                    this.vx *= -this.bounceEnergy;
+                }
+                if (this.y - this.radius < 0) {
+                    this.y = this.radius;
+                    this.vy *= -this.bounceEnergy;
+                }
+                if (this.y + this.radius > this.canvas.height) {
+                    this.y = this.canvas.height - this.radius;
+                    this.vy *= -this.bounceEnergy;
+                    if (Math.abs(this.vy) < 0.5) {
+                        this.vy = 0;
+                    }
+                }
+            }
+
+            draw(ctx) {
+                const gradient = ctx.createRadialGradient(
+                    this.x - this.radius * 0.3,
+                    this.y - this.radius * 0.3,
+                    0,
+                    this.x,
+                    this.y,
+                    this.radius
+                );
+                gradient.addColorStop(0, '#ffffff');
+                gradient.addColorStop(0.3, this.color);
+                gradient.addColorStop(1, this.color + '80');
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = this.color;
+            }
+
+            collideWith(other) {
+                const dx = other.x - this.x;
+                const dy = other.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.radius + other.radius) {
+                    const angle = Math.atan2(dy, dx);
+                    const sin = Math.sin(angle);
+                    const cos = Math.cos(angle);
+
+                    const vx1 = this.vx * cos + this.vy * sin;
+                    const vy1 = this.vy * cos - this.vx * sin;
+                    const vx2 = other.vx * cos + other.vy * sin;
+                    const vy2 = other.vy * cos - other.vx * sin;
+
+                    const totalMass = this.mass + other.mass;
+                    const newVx1 = ((this.mass - other.mass) * vx1 + 2 * other.mass * vx2) / totalMass;
+                    const newVx2 = ((other.mass - this.mass) * vx2 + 2 * this.mass * vx1) / totalMass;
+
+                    this.vx = newVx1 * cos - vy1 * sin;
+                    this.vy = vy1 * cos + newVx1 * sin;
+                    other.vx = newVx2 * cos - vy2 * sin;
+                    other.vy = vy2 * cos + newVx2 * sin;
+
+                    const overlap = (this.radius + other.radius - distance) / 2;
+                    this.x -= overlap * cos;
+                    this.y -= overlap * sin;
+                    other.x += overlap * cos;
+                    other.y += overlap * sin;
+
+                    this.vx *= this.bounceEnergy;
+                    this.vy *= this.bounceEnergy;
+                    other.vx *= other.bounceEnergy;
+                    other.vy *= other.bounceEnergy;
+                }
+            }
+        }
+
+        class PhysicsBallSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.balls = [];
+                this.animationId = null;
+                this.resizeCanvas();
+            }
+
+            resizeCanvas() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+
+            spawnBalls(x, y, count = 15) {
+                for (let i = 0; i < count; i++) {
+                    const offsetX = (Math.random() - 0.5) * 40;
+                    const offsetY = (Math.random() - 0.5) * 40;
+                    this.balls.push(new PhysicsBall(x + offsetX, y + offsetY, this.canvas));
+                }
+                if (!this.animationId) {
+                    this.animate();
+                }
+            }
+
+            checkCollisions() {
+                for (let i = 0; i < this.balls.length; i++) {
+                    for (let j = i + 1; j < this.balls.length; j++) {
+                        this.balls[i].collideWith(this.balls[j]);
+                    }
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.checkCollisions();
+
+                this.balls.forEach(ball => {
+                    ball.update();
+                    ball.draw(this.ctx);
+                });
+
+                this.ctx.shadowBlur = 0;
+
+                if (this.balls.length > 0) {
+                    this.animationId = requestAnimationFrame(() => this.animate());
+                } else {
+                    this.animationId = null;
+                }
+            }
+        }
+
+        function initPhysicsBallCanvas() {
+            const canvas = document.getElementById('physicsBallCanvas');
+            if (!canvas) return;
+
+            physicsBallSystem = new PhysicsBallSystem(canvas);
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                physicsBallSystem.spawnBalls(x, y, 15);
+            });
+
+            window.addEventListener('resize', () => {
+                if (physicsBallSystem) {
+                    physicsBallSystem.resizeCanvas();
+                }
+            });
+        }
+
+        function runPhysicsBallDemo() {
+            if (!physicsBallSystem) {
+                initPhysicsBallCanvas();
+            }
+            const canvas = document.getElementById('physicsBallCanvas');
+            if (canvas && physicsBallSystem) {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 3;
+                physicsBallSystem.spawnBalls(centerX, centerY, 20);
+            }
+        }
+
+        // Neon Glow Demo
+        const neonColors = ['#00f5d4', '#7b2cbf', '#ff6b6b', '#ffd93d'];
+        let neonColorIndex = 0;
+
+        function runNeonDemo() {
+            const neonTextSvg = document.getElementById('neonTextSvg');
+            const neonTextCss = document.getElementById('neonTextCss');
+            
+            if (!neonTextSvg || !neonTextCss) return;
+
+            neonColorIndex = (neonColorIndex + 1) % neonColors.length;
+            const currentColor = neonColors[neonColorIndex];
+
+            const neonTimeline = anime.timeline({
+                easing: 'easeInOutQuad'
+            });
+
+            neonTimeline
+                .add({
+                    targets: neonTextSvg,
+                    strokeDashoffset: [200, 0],
+                    duration: 1500,
+                    easing: 'easeInOutQuad'
+                })
+                .add({
+                    targets: neonTextSvg,
+                    fill: currentColor,
+                    stroke: currentColor,
+                    duration: 300,
+                    easing: 'easeOutQuad'
+                }, '-=300')
+                .add({
+                    targets: neonTextCss,
+                    color: currentColor,
+                    duration: 400,
+                    easing: 'easeOutQuad'
+                }, '-=200');
+
+            const glowIntensity = [
+                { shadows: '0 0 5px ' + currentColor + ', 0 0 10px ' + currentColor + ', 0 0 20px ' + currentColor + ', 0 0 40px ' + currentColor + ', 0 0 80px ' + currentColor },
+                { shadows: '0 0 10px ' + currentColor + ', 0 0 20px ' + currentColor + ', 0 0 40px ' + currentColor + ', 0 0 80px ' + currentColor + ', 0 0 120px ' + currentColor + ', 0 0 160px ' + currentColor },
+                { shadows: '0 0 15px ' + currentColor + ', 0 0 30px ' + currentColor + ', 0 0 60px ' + currentColor + ', 0 0 100px ' + currentColor + ', 0 0 180px ' + currentColor + ', 0 0 220px ' + currentColor }
+            ];
+
+            anime({
+                targets: neonTextCss,
+                textShadow: glowIntensity.map(g => g.shadows),
+                duration: 2500,
+                easing: 'easeInOutSine',
+                loop: false
+            });
+
+            anime({
+                targets: neonTextSvg,
+                scale: [1, 1.05, 1],
+                duration: 800,
+                easing: 'easeOutElastic(1, .5)'
+            });
+        }
+
         // ============================================
         // Draggable
         // ============================================
@@ -1591,33 +2852,134 @@
         }
 
         // ============================================
-        // Particles
+        // Enhanced Particle System with Connections & Mouse Interaction
         // ============================================
         function initParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+            const canvas = document.getElementById('globalParticleCanvas');
+            if (!canvas) return;
 
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.width = (Math.random() * 4 + 2) + 'px';
-                particle.style.height = particle.style.width;
-                particlesContainer.appendChild(particle);
+            const ctx = canvas.getContext('2d');
+            const particles = [];
+            const particleCount = 120;
+            const connectionDistance = 100;
+            const mouseRadius = 150;
+            const colors = ['#00f5d4', '#7b2cbf', '#ff6b6b', '#ffd93d'];
+
+            let mouse = { x: null, y: null };
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             }
 
-            anime({
-                targets: '.particle',
-                translateY: () => anime.random(-100, 100),
-                translateX: () => anime.random(-100, 100),
-                opacity: [0.1, 0.5, 0.1],
-                scale: [1, 1.5, 1],
-                duration: () => anime.random(3000, 6000),
-                delay: anime.stagger(100),
-                easing: 'easeInOutSine',
-                loop: true
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 2 + 1;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.baseX = this.x;
+                    this.baseY = this.y;
+                    this.density = Math.random() * 30 + 1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = this.color;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+
+                update() {
+                    if (mouse.x !== null && mouse.y !== null) {
+                        const dx = mouse.x - this.x;
+                        const dy = mouse.y - this.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < mouseRadius) {
+                            const force = (mouseRadius - distance) / mouseRadius;
+                            const angle = Math.atan2(dy, dx);
+                            const pushX = Math.cos(angle) * force * 2;
+                            const pushY = Math.sin(angle) * force * 2;
+
+                            this.x -= pushX;
+                            this.y -= pushY;
+                        }
+                    }
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                    this.x = Math.max(0, Math.min(canvas.width, this.x));
+                    this.y = Math.max(0, Math.min(canvas.height, this.y));
+                }
+            }
+
+            function initParticleArray() {
+                particles.length = 0;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function connectParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < connectionDistance) {
+                            const opacity = 1 - distance / connectionDistance;
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 245, 212, ${opacity * 0.3})`;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+
+                connectParticles();
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticleArray();
             });
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            resizeCanvas();
+            initParticleArray();
+            animate();
         }
 
         // ============================================
