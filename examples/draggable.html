@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draggable - Anime.js Learning</title>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@4.0.0/lib/anime.min.js"></script>
+  <style>
+    body {
+      margin: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .container-info {
+      margin-bottom: 20px;
+      color: #666;
+    }
+    .draggable-box {
+      width: 100px;
+      height: 100px;
+      background: #E91E63;
+      cursor: move;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-info">
+    <h2>Draggable Demo</h2>
+    <p>Drag the pink box below. Movement is restricted to a 500x500 area.</p>
+  </div>
+  
+  <!-- Single draggable element with pink background -->
+  <div class="draggable-box">Drag Me</div>
+  
+  <script>
+    // Draggable API: Makes an element interactive with drag functionality
+    // anime.createDraggable(selector, options)
+    // - selector: CSS selector for the target element(s)
+    // - options: Configuration object for drag behavior
+    
+    anime.createDraggable('.draggable-box', {
+      // container: [x, y, width, height] - Restricts drag movement to a specific area
+      // [0, 0, 500, 500] means the element can only move within a 500x500 pixel area
+      // starting from position (0, 0)
+      container: [0, 0, 500, 500],
+      
+      // releaseEase: Easing function applied when the element is released
+      // 'easeOutQuad' provides a smooth deceleration effect
+      releaseEase: 'easeOutQuad'
+    });
+  </script>
+</body>
+</html>

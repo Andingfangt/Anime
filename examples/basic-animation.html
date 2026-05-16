@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Animation - Anime.js Learning</title>
+  <!-- Load anime.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/animejs@4.0.0/lib/anime.min.js"></script>
+  <style>
+    body {
+      margin: 50px;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Single div element to animate -->
+  <div class="box" style="width:100px;height:100px;background:#4CAF50;"></div>
+
+  <script>
+    // anime() - Main function to create animations
+    // targets: CSS selector or DOM element(s) to animate
+    // properties: CSS properties and transform values to animate
+    anime({
+      targets: '.box',           // Select element with class 'box'
+      translateX: 250,           // Move horizontally 250px
+      opacity: [0, 1],           // Fade in: array [from, to]
+      rotate: '1turn',           // Rotate 360 degrees (1 full turn)
+      duration: 1000,            // Animation duration: 1000ms (1 second)
+      easing: 'easeInOutQuad'    // Smooth acceleration/deceleration
+    });
+  </script>
+</body>
+</html>

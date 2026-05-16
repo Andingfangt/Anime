@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stagger - Anime.js Learning</title>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@4.0.0/lib/anime.min.js"></script>
+</head>
+<body>
+  <div class="box" style="width:60px;height:60px;background:#FFC107;margin:5px;"></div>
+  <div class="box" style="width:60px;height:60px;background:#FFC107;margin:5px;"></div>
+  <div class="box" style="width:60px;height:60px;background:#FFC107;margin:5px;"></div>
+  <div class="box" style="width:60px;height:60px;background:#FFC107;margin:5px;"></div>
+  <div class="box" style="width:60px;height:60px;background:#FFC107;margin:5px;"></div>
+  <script>
+    // Stagger: animate multiple elements with time offset
+    // anime.stagger(value) creates a time-based offset for each target element
+    // Each element starts its animation 'value' milliseconds after the previous one
+    anime({
+      targets: '.box',
+      translateX: 200,  // Move all boxes right by 200px
+      scale: [0.5, 1],  // Scale from 0.5 to 1 (grow effect)
+      opacity: [0, 1],  // Fade in from 0 to 1
+      delay: anime.stagger(100),  // Each element starts 100ms after previous
+      duration: 600,
+      easing: 'easeOutQuad'
+    });
+  </script>
+</body>
+</html>

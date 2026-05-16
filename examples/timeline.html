@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Timeline - Anime.js Learning</title>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@4.0.0/lib/anime.min.js"></script>
+</head>
+<body>
+  <div class="box1" style="width:80px;height:80px;background:#FF5722;margin:10px;"></div>
+  <div class="box2" style="width:80px;height:80px;background:#2196F3;margin:10px;"></div>
+  <div class="box3" style="width:80px;height:80px;background:#9C27B0;margin:10px;"></div>
+  <script>
+    // Timeline: sequence animations with time control
+    // anime.timeline() creates a timeline for orchestrating multiple animations
+    const timeline = anime.timeline({
+      defaults: {
+        duration: 500,  // Default duration for all animations
+        easing: 'easeOutQuad'  // Smooth easing applied to all animations
+      }
+    });
+
+    // .add() method adds animations to the timeline
+    // Each animation can have its own targets and properties
+    // The second parameter controls timing offset
+    timeline
+      .add({
+        targets: '.box1',
+        translateX: 100,
+        opacity: [0, 1]
+      })
+      .add({
+        targets: '.box2',
+        translateX: 150,
+        opacity: [0, 1]
+      }, '-=200')  // Start 200ms before previous animation ends (overlap)
+      .add({
+        targets: '.box3',
+        translateX: 200,
+        opacity: [0, 1]
+      }, '-=200');  // Creates a cascading effect with overlapping animations
+  </script>
+</body>
+</html>
