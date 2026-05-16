@@ -54,7 +54,11 @@ open examples/basic-animation.html
 start examples/basic-animation.html
 ```
 
-无需构建工具或服务器 - 所有示例都通过 CDN 加载 anime.js。
+无需构建工具或服务器 - anime.js 已下载到本地 `lib/` 目录。
+
+如需更新 anime.js 版本，可从以下 CDN 下载：
+- bootcdn（国内）：https://cdn.bootcdn.net/ajax/libs/animejs/3.2.2/anime.min.js
+- jsdelivr：https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js
 
 ## 🔗 资源
 
@@ -76,6 +80,8 @@ start examples/basic-animation.html
 ```
 Anime/
 ├── README.md
+├── lib/
+│   └── anime.min.js
 ├── examples/
 │   ├── basic-animation.html
 │   ├── timeline.html
@@ -86,7 +92,7 @@ Anime/
 ## 💡 提示
 
 - 每个示例都是独立的 - 文件之间无依赖关系
-- 所有示例使用 anime.js v3.2.2（通过 CDN）
+- 所有示例使用 anime.js v3.2.2（本地文件）
 - 内联注释解释关键 API 概念
 - 尝试修改数值来实验！
 
