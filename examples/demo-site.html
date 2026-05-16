@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime.js 动画演示 - 全面展示</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS Variables - Design System
+           ============================================ */
+        :root {
+            /* Colors */
+            --color-bg-primary: #0a0a0f;
+            --color-bg-secondary: #12121a;
+            --color-bg-card: #1a1a24;
+            --color-bg-card-hover: #22222e;
+            --color-accent-primary: #00f5d4;
+            --color-accent-secondary: #7b2cbf;
+            --color-accent-tertiary: #ff6b6b;
+            --color-accent-quaternary: #ffd93d;
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #a0a0b0;
+            --color-text-muted: #6a6a7a;
+            --color-border: #2a2a3a;
+            --color-gradient-1: linear-gradient(135deg, #00f5d4 0%, #7b2cbf 100%);
+            --color-gradient-2: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 100%);
+            --color-gradient-3: linear-gradient(135deg, #7b2cbf 0%, #00f5d4 100%);
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+            --space-4xl: 6rem;
+            
+            /* Typography */
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Noto Sans SC', sans-serif;
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 2rem;
+            --text-4xl: 2.5rem;
+            --text-5xl: 3.5rem;
+            --text-6xl: 4.5rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 40px rgba(0, 245, 212, 0.3);
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+            --transition-slow: 400ms ease;
+        }
+
+        /* ============================================
+           Reset & Base Styles
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 245, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 107, 107, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Noise Texture Overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ============================================
+           Navigation
+           ============================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: var(--space-lg) var(--space-2xl);
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-border);
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 800;
+            background: var(--color-gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-xl);
+            list-style: none;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            padding: var(--space-sm) 0;
+            transition: color var(--transition-base);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-gradient-1);
+            transition: width var(--transition-slow);
+        }
+
+        .nav-link:hover {
+            color: var(--color-text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu Button */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--space-sm);
+        }
+
+        .nav-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--color-text-primary);
+            transition: var(--transition-base);
+        }
+
+        /* ============================================
+           Hero Section
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--space-4xl) var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .hero-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+
+        .hero-shape-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--color-accent-primary);
+            top: 10%;
+            left: -10%;
+        }
+
+        .hero-shape-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--color-accent-secondary);
+            top: 60%;
+            right: -5%;
+        }
+
+        .hero-shape-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--color-accent-tertiary);
+            bottom: 10%;
+            left: 20%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: var(--space-sm) var(--space-lg);
+            background: rgba(0, 245, 212, 0.1);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            color: var(--color-accent-primary);
+            margin-bottom: var(--space-xl);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: var(--text-6xl);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: var(--space-lg);
+            letter-spacing: -0.03em;
+        }
+
+        .hero-title-line {
+            display: block;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .hero-title-gradient {
+            background: var(--color-gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: var(--text-xl);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-2xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform var(--transition-fast), box-shadow var(--transition-base);
+        }
+
+        .btn-primary {
+            background: var(--color-gradient-1);
+            color: var(--color-bg-primary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-accent-primary);
+            background: rgba(0, 245, 212, 0.05);
+        }
+
+        .btn-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            pointer-events: none;
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: var(--space-2xl);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+            opacity: 0;
+        }
+
+        .hero-scroll-indicator svg {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(10px); }
+            60% { transform: translateY(5px); }
+        }
+
+        /* ============================================
+           Section Styles
+           ============================================ */
+        .section {
+            padding: var(--space-4xl) var(--space-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: var(--text-4xl);
+            font-weight: 800;
+            margin-bottom: var(--space-md);
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: var(--text-lg);
+            color: var(--color-text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           Demo Cards Grid
+           ============================================ */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .demo-card {
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            cursor: pointer;
+            transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .demo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(0, 245, 212, 0.3);
+        }
+
+        .demo-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+        }
+
+        .demo-card-title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 600;
+        }
+
+        .demo-card-badge {
+            padding: var(--space-xs) var(--space-sm);
+            background: rgba(0, 245, 212, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            color: var(--color-accent-primary);
+            font-weight: 500;
+        }
+
+        .demo-card-description {
+            color: var(--color-text-secondary);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-lg);
+            line-height: 1.7;
+        }
+
+        .demo-card-stage {
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-lg);
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card-hint {
+            position: absolute;
+            bottom: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            opacity: 0.7;
+        }
+
+        /* ============================================
+           Demo Elements
+           ============================================ */
+        /* Basic Transform */
+        .demo-box {
+            width: 60px;
+            height: 60px;
+            background: var(--color-gradient-1);
+            border-radius: var(--radius-md);
+        }
+
+        /* Stagger */
+        .stagger-container {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .stagger-dot {
+            width: 20px;
+            height: 20px;
+            background: var(--color-accent-secondary);
+            border-radius: 50%;
+        }
+
+        /* Timeline */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            width: 80%;
+        }
+
+        .timeline-bar {
+            height: 12px;
+            background: var(--color-accent-tertiary);
+            border-radius: var(--radius-full);
+            width: 0;
+        }
+
+        /* Morphing SVG */
+        .morph-svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .morph-path {
+            fill: var(--color-accent-quaternary);
+        }
+
+        /* Color Transition */
+        .color-box {
+            width: 80px;
+            height: 80px;
+            background: #ff6b6b;
+            border-radius: var(--radius-lg);
+        }
+
+        /* Elastic */
+        .elastic-ball {
+            width: 50px;
+            height: 50px;
+            background: var(--color-gradient-2);
+            border-radius: 50%;
+        }
+
+        /* Draggable */
+        .draggable-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .draggable-box {
+            width: 60px;
+            height: 60px;
+            background: var(--color-gradient-3);
+            border-radius: var(--radius-md);
+            position: absolute;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .draggable-box:active {
+            cursor: grabbing;
+        }
+
+        .draggable-box svg {
+            width: 24px;
+            height: 24px;
+            color: var(--color-bg-primary);
+        }
+
+        /* ============================================
+           Features Section
+           ============================================ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .feature-card {
+            padding: var(--space-xl);
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 245, 212, 0.1);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--color-accent-primary);
+        }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .feature-description {
+            color: var(--color-text-secondary);
+            font-size: var(--text-sm);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           Code Preview
+           ============================================ */
+        .code-preview {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-top: var(--space-lg);
+            overflow-x: auto;
+        }
+
+        .code-preview pre {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: var(--text-sm);
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .code-preview .keyword {
+            color: var(--color-accent-primary);
+        }
+
+        .code-preview .string {
+            color: var(--color-accent-quaternary);
+        }
+
+        .code-preview .number {
+            color: var(--color-accent-tertiary);
+        }
+
+        /* ============================================
+           Footer
+           ============================================ */
+        .footer {
+            background: var(--color-bg-secondary);
+            border-top: 1px solid var(--color-border);
+            padding: var(--space-3xl) var(--space-xl);
+            margin-top: var(--space-4xl);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-2xl);
+        }
+
+        .footer-section {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .footer-title {
+            font-family: var(--font-display);
+            font-size: var(--text-base);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--color-text-primary);
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .footer-link {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: var(--text-sm);
+            transition: color var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            color: var(--color-accent-primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: var(--space-2xl) auto 0;
+            padding-top: var(--space-xl);
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+
+        .footer-heart {
+            color: var(--color-accent-tertiary);
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* ============================================
+           Floating Particles
+           ============================================ */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--color-accent-primary);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        /* ============================================
+           Responsive Design
+           ============================================ */
+        @media (max-width: 768px) {
+            :root {
+                --text-6xl: 3rem;
+                --text-5xl: 2.5rem;
+                --text-4xl: 2rem;
+            }
+
+            .nav {
+                padding: var(--space-md) var(--space-lg);
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--color-bg-secondary);
+                flex-direction: column;
+                padding: var(--space-lg);
+                gap: var(--space-md);
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .hero {
+                padding: var(--space-3xl) var(--space-md);
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section {
+                padding: var(--space-2xl) var(--space-md);
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-card-stage {
+                height: 160px;
+            }
+        }
+
+        /* ============================================
+           Animation States
+           ============================================ */
+        .animate-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <div class="nav-logo">Anime.js</div>
+            <button class="nav-toggle" id="navToggle" aria-label="菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#hero" class="nav-link">首页</a></li>
+                <li><a href="#demos" class="nav-link">演示</a></li>
+                <li><a href="#features" class="nav-link">特性</a></li>
+                <li><a href="#footer" class="nav-link">关于</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-shapes">
+            <div class="hero-shape hero-shape-1" id="heroShape1"></div>
+            <div class="hero-shape hero-shape-2" id="heroShape2"></div>
+            <div class="hero-shape hero-shape-3" id="heroShape3"></div>
+        </div>
+        <div class="hero-content">
+            <span class="hero-badge" id="heroBadge">✨ 强大的 JavaScript 动画库</span>
+            <h1 class="hero-title">
+                <span class="hero-title-line">创造令人惊叹的</span>
+                <span class="hero-title-line"><span class="hero-title-gradient">网页动画</span></span>
+            </h1>
+            <p class="hero-subtitle" id="heroSubtitle">
+                Anime.js 是一个轻量级的 JavaScript 动画库，拥有简单而强大的 API。
+                让我们一起探索它的无限可能。
+            </p>
+            <div class="hero-cta" id="heroCta">
+                <a href="#demos" class="btn btn-primary">
+                    <span>开始探索</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="https://animejs.com/documentation/" target="_blank" class="btn btn-secondary">
+                    <span>官方文档</span>
+                </a>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator" id="scrollIndicator">
+            <span>向下滚动</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="section" id="demos">
+        <div class="section-header">
+            <h2 class="section-title">动画演示</h2>
+            <p class="section-subtitle">点击每个卡片查看不同的动画效果，体验 Anime.js 的强大功能</p>
+        </div>
+        <div class="demo-grid">
+            <!-- Basic Transform -->
+            <div class="demo-card" data-demo="transform">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">基础变换</h3>
+                    <span class="demo-card-badge">基础</span>
+                </div>
+                <p class="demo-card-description">演示 translateX、rotate、scale 等基础 CSS 变换动画效果</p>
+                <div class="demo-card-stage">
+                    <div class="demo-box" id="transformBox"></div>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- Stagger Effect -->
+            <div class="demo-card" data-demo="stagger">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">交错动画</h3>
+                    <span class="demo-card-badge">进阶</span>
+                </div>
+                <p class="demo-card-description">使用 stagger() 创建级联动画效果，多个元素依次动画</p>
+                <div class="demo-card-stage">
+                    <div class="stagger-container" id="staggerContainer">
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                        <div class="stagger-dot"></div>
+                    </div>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="demo-card" data-demo="timeline">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">时间线</h3>
+                    <span class="demo-card-badge">进阶</span>
+                </div>
+                <p class="demo-card-description">使用 timeline() 编排复杂的动画序列，精确控制时间</p>
+                <div class="demo-card-stage">
+                    <div class="timeline-container" id="timelineContainer">
+                        <div class="timeline-bar"></div>
+                        <div class="timeline-bar"></div>
+                        <div class="timeline-bar"></div>
+                    </div>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- SVG Morphing -->
+            <div class="demo-card" data-demo="morph">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">SVG 变形</h3>
+                    <span class="demo-card-badge">高级</span>
+                </div>
+                <p class="demo-card-description">SVG 路径变形动画，实现形状之间的平滑过渡</p>
+                <div class="demo-card-stage">
+                    <svg class="morph-svg" viewBox="0 0 100 100" id="morphSvg">
+                        <path class="morph-path" id="morphPath" d="M50 10 L90 90 L10 90 Z"/>
+                    </svg>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- Color Transition -->
+            <div class="demo-card" data-demo="color">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">颜色过渡</h3>
+                    <span class="demo-card-badge">基础</span>
+                </div>
+                <p class="demo-card-description">平滑的颜色过渡动画，支持多种颜色格式</p>
+                <div class="demo-card-stage">
+                    <div class="color-box" id="colorBox"></div>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- Elastic Easing -->
+            <div class="demo-card" data-demo="elastic">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">弹性缓动</h3>
+                    <span class="demo-card-badge">进阶</span>
+                </div>
+                <p class="demo-card-description">使用弹性缓动函数创建生动的弹跳效果</p>
+                <div class="demo-card-stage">
+                    <div class="elastic-ball" id="elasticBall"></div>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+
+            <!-- Draggable -->
+            <div class="demo-card" data-demo="draggable">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">可拖拽元素</h3>
+                    <span class="demo-card-badge">交互</span>
+                </div>
+                <p class="demo-card-description">使用 createDraggable() 创建可拖拽的交互元素</p>
+                <div class="demo-card-stage">
+                    <div class="draggable-area" id="draggableArea">
+                        <div class="draggable-box" id="draggableBox">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="demo-card-hint">拖动方块</span>
+                </div>
+            </div>
+
+            <!-- Text Animation -->
+            <div class="demo-card" data-demo="text">
+                <div class="demo-card-header">
+                    <h3 class="demo-card-title">文字动画</h3>
+                    <span class="demo-card-badge">创意</span>
+                </div>
+                <p class="demo-card-description">逐字符动画效果，创建引人注目的文字动画</p>
+                <div class="demo-card-stage">
+                    <div id="textDemo" style="font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--color-accent-primary);">
+                        动画魔法
+                    </div>
+                    <span class="demo-card-hint">点击触发动画</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="section-header">
+            <h2 class="section-title">核心特性</h2>
+            <p class="section-subtitle">Anime.js 提供了丰富的功能，让动画创作变得简单而强大</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">轻量高效</h3>
+                <p class="feature-description">压缩后仅 17KB，零依赖，性能优异，适合任何项目</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">时间线控制</h3>
+                <p class="feature-description">精确控制动画序列，支持重叠、延迟和循环</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                        <path d="M12 8v8M8 12h8"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">SVG 支持</h3>
+                <p class="feature-description">完整的 SVG 动画支持，包括路径变形和描边动画</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16v16H4z"/>
+                        <path d="M4 12h16M12 4v16"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">交错动画</h3>
+                <p class="feature-description">轻松创建级联效果，让多个元素依次动画</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">丰富缓动</h3>
+                <p class="feature-description">内置多种缓动函数，支持自定义贝塞尔曲线</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">事件回调</h3>
+                <p class="feature-description">完整的生命周期回调，精确控制动画状态</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4 class="footer-title">学习资源</h4>
+                <ul class="footer-links">
+                    <li><a href="https://animejs.com/documentation/" target="_blank" class="footer-link">官方文档</a></li>
+                    <li><a href="https://animejs.com/easing-editor" target="_blank" class="footer-link">缓动编辑器</a></li>
+                    <li><a href="https://codepen.io/collection/Poerqa" target="_blank" class="footer-link">CodePen 示例</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-title">社区</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/juliangarnier/anime" target="_blank" class="footer-link">GitHub</a></li>
+                    <li><a href="https://twitter.com/juliangarnier" target="_blank" class="footer-link">Twitter</a></li>
+                    <li><a href="https://discord.gg/animejs" target="_blank" class="footer-link">Discord</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-title">相关项目</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/juliangarnier/anime" target="_blank" class="footer-link">Anime.js</a></li>
+                    <li><a href="https://particles.js.org/" target="_blank" class="footer-link">Particles.js</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-title">关于</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">本项目</a></li>
+                    <li><a href="https://animejs.com" target="_blank" class="footer-link">官方网站</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>用 <span class="footer-heart">♥</span> 制作 · 基于 Anime.js v3.2.2</p>
+        </div>
+    </footer>
+
+    <!-- Anime.js Library -->
+    <script src="../lib/anime.min.js"></script>
+    
+    <script>
+        // ============================================
+        // Page Load Animations
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize all animations
+            initPageLoadAnimations();
+            initNavigationAnimations();
+            initHeroAnimations();
+            initDemoCards();
+            initParticles();
+            initScrollAnimations();
+            initDraggable();
+            initButtonEffects();
+        });
+
+        // ============================================
+        // Page Load Animations
+        // ============================================
+        function initPageLoadAnimations() {
+            // Navigation fade in
+            anime({
+                targets: '#nav',
+                opacity: [0, 1],
+                translateY: [-20, 0],
+                duration: 800,
+                easing: 'easeOutExpo'
+            });
+        }
+
+        // ============================================
+        // Navigation Animations
+        // ============================================
+        function initNavigationAnimations() {
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            navToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                anime({
+                    targets: '#navLinks',
+                    opacity: [0, 1],
+                    translateY: [-10, 0],
+                    duration: 300,
+                    easing: 'easeOutQuad'
+                });
+            });
+
+            // Smooth scroll for nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // ============================================
+        // Hero Animations
+        // ============================================
+        function initHeroAnimations() {
+            // Background shapes floating animation
+            anime({
+                targets: '#heroShape1',
+                translateX: [0, 30, 0],
+                translateY: [0, -20, 0],
+                duration: 8000,
+                easing: 'easeInOutSine',
+                loop: true
+            });
+
+            anime({
+                targets: '#heroShape2',
+                translateX: [0, -25, 0],
+                translateY: [0, 25, 0],
+                duration: 10000,
+                easing: 'easeInOutSine',
+                loop: true
+            });
+
+            anime({
+                targets: '#heroShape3',
+                translateX: [0, 20, 0],
+                translateY: [0, 30, 0],
+                duration: 7000,
+                easing: 'easeInOutSine',
+                loop: true
+            });
+
+            // Hero content timeline
+            const heroTimeline = anime.timeline({
+                easing: 'easeOutExpo'
+            });
+
+            heroTimeline
+                .add({
+                    targets: '#heroBadge',
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    duration: 600
+                })
+                .add({
+                    targets: '.hero-title-line',
+                    opacity: [0, 1],
+                    translateY: [40, 0],
+                    duration: 800,
+                    delay: anime.stagger(150)
+                }, '-=400')
+                .add({
+                    targets: '#heroSubtitle',
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    duration: 600
+                }, '-=400')
+                .add({
+                    targets: '#heroCta',
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    duration: 600
+                }, '-=400')
+                .add({
+                    targets: '#scrollIndicator',
+                    opacity: [0, 0.7],
+                    duration: 600
+                }, '-=200');
+        }
+
+        // ============================================
+        // Demo Cards
+        // ============================================
+        function initDemoCards() {
+            // Staggered entrance for demo cards
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: '.demo-card',
+                            opacity: [0, 1],
+                            translateY: [30, 0],
+                            duration: 600,
+                            delay: anime.stagger(100),
+                            easing: 'easeOutExpo'
+                        });
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observer.observe(document.querySelector('.demo-grid'));
+
+            // Add click handlers for each demo
+            document.querySelectorAll('.demo-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const demoType = card.dataset.demo;
+                    runDemo(demoType);
+                });
+            });
+        }
+
+        // ============================================
+        // Demo Animations
+        // ============================================
+        function runDemo(type) {
+            switch(type) {
+                case 'transform':
+                    runTransformDemo();
+                    break;
+                case 'stagger':
+                    runStaggerDemo();
+                    break;
+                case 'timeline':
+                    runTimelineDemo();
+                    break;
+                case 'morph':
+                    runMorphDemo();
+                    break;
+                case 'color':
+                    runColorDemo();
+                    break;
+                case 'elastic':
+                    runElasticDemo();
+                    break;
+                case 'text':
+                    runTextDemo();
+                    break;
+            }
+        }
+
+        // Basic Transform Demo
+        function runTransformDemo() {
+            anime({
+                targets: '#transformBox',
+                translateX: [
+                    { value: 100, duration: 500 },
+                    { value: -100, duration: 500 },
+                    { value: 0, duration: 500 }
+                ],
+                rotate: {
+                    value: '1turn',
+                    duration: 1500,
+                    easing: 'easeInOutQuad'
+                },
+                scale: [
+                    { value: 1.5, duration: 300, easing: 'easeOutQuad' },
+                    { value: 1, duration: 300, easing: 'easeInOutQuad' }
+                ],
+                borderRadius: ['12px', '50%', '12px'],
+                duration: 1500,
+                easing: 'easeInOutQuad'
+            });
+        }
+
+        // Stagger Demo
+        function runStaggerDemo() {
+            anime({
+                targets: '.stagger-dot',
+                translateY: [
+                    { value: -50, duration: 300 },
+                    { value: 0, duration: 300 }
+                ],
+                scale: [
+                    { value: 1.5, duration: 300 },
+                    { value: 1, duration: 300 }
+                ],
+                backgroundColor: [
+                    { value: '#7b2cbf' },
+                    { value: '#00f5d4' },
+                    { value: '#7b2cbf' }
+                ],
+                delay: anime.stagger(80),
+                easing: 'easeOutElastic(1, .5)'
+            });
+        }
+
+        // Timeline Demo
+        function runTimelineDemo() {
+            const bars = document.querySelectorAll('.timeline-bar');
+            
+            // Reset bars
+            bars.forEach(bar => bar.style.width = '0');
+
+            const tl = anime.timeline({
+                easing: 'easeOutExpo'
+            });
+
+            tl.add({
+                targets: bars[0],
+                width: '100%',
+                duration: 800
+            })
+            .add({
+                targets: bars[1],
+                width: '100%',
+                duration: 600
+            }, '-=400')
+            .add({
+                targets: bars[2],
+                width: '100%',
+                duration: 400
+            }, '-=300');
+        }
+
+        // SVG Morph Demo
+        function runMorphDemo() {
+            const shapes = [
+                'M50 10 L90 90 L10 90 Z',           // Triangle
+                'M50 5 L95 50 L50 95 L5 50 Z',      // Diamond
+                'M25 25 L75 25 L75 75 L25 75 Z',    // Square
+                'M50 10 C80 10 90 40 90 50 C90 80 60 90 50 90 C40 90 10 80 10 50 C10 40 20 10 50 10 Z', // Blob
+                'M50 10 L90 90 L10 90 Z'            // Back to triangle
+            ];
+
+            let currentIndex = 0;
+
+            anime({
+                targets: '#morphPath',
+                d: [
+                    { value: shapes[1] },
+                    { value: shapes[2] },
+                    { value: shapes[3] },
+                    { value: shapes[4] }
+                ],
+                duration: 3000,
+                easing: 'easeInOutQuad',
+                rotate: '1turn'
+            });
+        }
+
+        // Color Demo
+        function runColorDemo() {
+            anime({
+                targets: '#colorBox',
+                backgroundColor: [
+                    { value: '#ff6b6b' },
+                    { value: '#ffd93d' },
+                    { value: '#00f5d4' },
+                    { value: '#7b2cbf' },
+                    { value: '#ff6b6b' }
+                ],
+                borderRadius: ['16px', '50%', '16px'],
+                scale: [
+                    { value: 1.2, duration: 300 },
+                    { value: 1, duration: 300 }
+                ],
+                duration: 2000,
+                easing: 'easeInOutQuad'
+            });
+        }
+
+        // Elastic Demo
+        function runElasticDemo() {
+            anime({
+                targets: '#elasticBall',
+                translateY: [
+                    { value: -80, duration: 200, easing: 'easeOutQuad' },
+                    { value: 0, duration: 800, easing: 'easeOutElastic(1, .3)' }
+                ],
+                scaleX: [
+                    { value: 1.2, duration: 100 },
+                    { value: 0.8, duration: 100 },
+                    { value: 1, duration: 500 }
+                ],
+                scaleY: [
+                    { value: 0.8, duration: 100 },
+                    { value: 1.2, duration: 100 },
+                    { value: 1, duration: 500 }
+                ]
+            });
+        }
+
+        // Text Demo
+        function runTextDemo() {
+            const textDemo = document.getElementById('textDemo');
+            const text = textDemo.textContent;
+            textDemo.innerHTML = text.split('').map(char => 
+                `<span style="display:inline-block">${char}</span>`
+            ).join('');
+
+            anime({
+                targets: '#textDemo span',
+                opacity: [0, 1],
+                translateY: [50, 0],
+                rotateX: [90, 0],
+                delay: anime.stagger(50),
+                easing: 'easeOutElastic(1, .5)',
+                duration: 1000
+            });
+        }
+
+        // ============================================
+        // Draggable
+        // ============================================
+        function initDraggable() {
+            const draggableBox = document.getElementById('draggableBox');
+            const container = document.getElementById('draggableArea');
+            
+            if (!draggableBox || !container) return;
+
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+
+            draggableBox.addEventListener('mousedown', startDrag);
+            draggableBox.addEventListener('touchstart', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+
+            function startDrag(e) {
+                isDragging = true;
+                const rect = draggableBox.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                
+                if (e.type === 'touchstart') {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                } else {
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+                
+                initialX = rect.left - containerRect.left;
+                initialY = rect.top - containerRect.top;
+                
+                draggableBox.style.cursor = 'grabbing';
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                
+                let currentX, currentY;
+                if (e.type === 'touchmove') {
+                    currentX = e.touches[0].clientX;
+                    currentY = e.touches[0].clientY;
+                } else {
+                    currentX = e.clientX;
+                    currentY = e.clientY;
+                }
+                
+                const containerRect = container.getBoundingClientRect();
+                const boxWidth = 60;
+                const boxHeight = 60;
+                
+                let newX = initialX + (currentX - startX);
+                let newY = initialY + (currentY - startY);
+                
+                // Constrain to container
+                newX = Math.max(0, Math.min(newX, containerRect.width - boxWidth));
+                newY = Math.max(0, Math.min(newY, containerRect.height - boxHeight));
+                
+                draggableBox.style.left = newX + 'px';
+                draggableBox.style.top = newY + 'px';
+            }
+
+            function endDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                draggableBox.style.cursor = 'grab';
+                
+                // Bounce back animation
+                anime({
+                    targets: draggableBox,
+                    left: '50%',
+                    top: '50%',
+                    translateX: ['-50%', '-50%'],
+                    translateY: ['-50%', '-50%'],
+                    duration: 500,
+                    easing: 'easeOutElastic(1, .5)'
+                });
+            }
+
+            // Center the box initially
+            draggableBox.style.left = '50%';
+            draggableBox.style.top = '50%';
+            draggableBox.style.transform = 'translate(-50%, -50%)';
+        }
+
+        // ============================================
+        // Particles
+        // ============================================
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+
+            anime({
+                targets: '.particle',
+                translateY: () => anime.random(-100, 100),
+                translateX: () => anime.random(-100, 100),
+                opacity: [0.1, 0.5, 0.1],
+                scale: [1, 1.5, 1],
+                duration: () => anime.random(3000, 6000),
+                delay: anime.stagger(100),
+                easing: 'easeInOutSine',
+                loop: true
+            });
+        }
+
+        // ============================================
+        // Scroll Animations
+        // ============================================
+        function initScrollAnimations() {
+            // Feature cards
+            const featureObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: '.feature-card',
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 600,
+                            delay: anime.stagger(100),
+                            easing: 'easeOutExpo'
+                        });
+                        featureObserver.disconnect();
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            featureObserver.observe(document.querySelector('.features-grid'));
+
+            // Footer sections
+            const footerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: '.footer-section',
+                            opacity: [0, 1],
+                            translateY: [20, 0],
+                            duration: 600,
+                            delay: anime.stagger(100),
+                            easing: 'easeOutExpo'
+                        });
+                        footerObserver.disconnect();
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            footerObserver.observe(document.querySelector('.footer'));
+        }
+
+        // ============================================
+        // Button Effects
+        // ============================================
+        function initButtonEffects() {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    ripple.className = 'btn-ripple';
+                    
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
+                    ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
+                    
+                    this.appendChild(ripple);
+                    
+                    anime({
+                        targets: ripple,
+                        scale: [0, 2],
+                        opacity: [0.5, 0],
+                        duration: 600,
+                        easing: 'easeOutExpo',
+                        complete: () => ripple.remove()
+                    });
+                });
+
+                // Hover scale
+                btn.addEventListener('mouseenter', () => {
+                    anime({
+                        targets: btn,
+                        scale: 1.02,
+                        duration: 200,
+                        easing: 'easeOutQuad'
+                    });
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    anime({
+                        targets: btn,
+                        scale: 1,
+                        duration: 200,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+</html>

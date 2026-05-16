@@ -4,6 +4,29 @@
 
 ## 📚 示例
 
+### 🎨 动画演示站 (`examples/demo-site.html`)
+**完整的 anime.js 动画演示网站，全站 UI 都有动画效果！**
+
+包含 8 种动画演示：
+- 基础变换（平移、旋转、缩放）
+- 交错效果（多个元素级联动画）
+- 时间线（顺序动画编排）
+- SVG 形态变化
+- 颜色过渡
+- 弹性/弹跳缓动
+- 可拖拽元素
+- 文字逐字动画
+
+**UI 动画效果**：
+- 导航栏悬停动画、页面加载淡入
+- Hero 区域文字揭示、浮动元素
+- 卡片悬停放大、交错入场
+- 按钮涟漪效果、点击动画
+- 浮动粒子背景
+- 滚动触发动画
+
+---
+
 ### 1. 基础动画 (`examples/basic-animation.html`)
 演示核心 `anime()` 函数的使用：
 - CSS 变换：`translateX`、`opacity`、`rotate`
@@ -83,6 +106,7 @@ Anime/
 ├── lib/
 │   └── anime.min.js
 ├── examples/
+│   ├── demo-site.html      # 🎨 动画演示站（推荐）
 │   ├── basic-animation.html
 │   ├── timeline.html
 │   ├── stagger.html
